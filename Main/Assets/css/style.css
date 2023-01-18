@@ -1,0 +1,65 @@
+/* Set a dark background color */
+body {
+    background-color: #2c3e50;
+    color: #fff;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Style form inputs */
+  form {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+  }
+  form label {
+    margin-right: 10px;
+  }
+  form input[type="text"] {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #34495e;
+    color: #fff;
+  }
+  form button[type="submit"] {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #2980b9;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  form button[type="submit"]:hover {
+    background-color: #3498db;
+  }
+
+  /* Style weather data sections */
+  #current-conditions, #forecast, #search-history {
+    margin: 20px 0;
+  }
+  #current-conditions h2, #forecast h3, #search-history h3 {
+    margin-bottom: 10px;
+  }
+  #current-conditions p, #forecast .forecast-day p {
+    margin-bottom: 5px;
+  }
+  #current-conditions img, #forecast .forecast-day img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  #forecast .forecast-day {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  #search-history ul {
+    list-style: none;
+    padding: 0;
+  }
+  #search-history li {
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
