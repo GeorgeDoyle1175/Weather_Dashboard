@@ -6,10 +6,14 @@
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="./Assets/css/style.css">
-    <script src='main.js'></script>
 </head>
 <body>
-    <form>
+    <header>
+        <div class="header-container">
+          <h1 class="header-title">Weather Dashboard</h1>
+        </div>
+      </header>
+    <form id="input-form">
       <label for="city">Search for a city:</label>
       <input type="text" id="city" name="city">
       <button type="submit">Search</button>
@@ -17,7 +21,7 @@
     <div id="current-conditions">
       <h2 id="city-name"></h2>
       <p id="date"></p>
-      <img id="weather-icon" src="" alt="Weather Icon">
+      <!-- <img id="weather-icon" src="" alt="Weather Icon"> -->
       <p>Temperature: <span id="temperature"></span></p>
       <p>Humidity: <span id="humidity"></span></p>
       <p>Wind Speed: <span id="wind-speed"></span></p>
@@ -26,7 +30,7 @@
       <h3>5-Day Forecast</h3>
       <div class="forecast-day">
         <p class="date"></p>
-        <img class="weather-icon" src="" alt="Weather Icon">
+        <!-- <img class="weather-icon" src="" alt="Weather Icon"> -->
         <p>Temperature: <span class="temperature"></span></p>
         <p>Humidity: <span class="humidity"></span></p>
         <p>Wind Speed: <span class="wind-speed"></span></p>
@@ -36,5 +40,6 @@
       <h3>Search History</h3>
       <ul id="city-list"></ul>
     </div>
+    <script src='./Assets/js/script.js'></script>
   </body>
 </html>
