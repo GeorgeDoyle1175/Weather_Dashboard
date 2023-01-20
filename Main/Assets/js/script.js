@@ -1,7 +1,7 @@
 const cityInputEl = document.querySelector('#city');
 const inputFormEl = document.getElementById("input-form");
 const forecastTempData = [];
-const forecastHumdityData = [];
+const forecastHumidityData = [];
 const forecastWindSpeedData = [];
 
 console.log(inputFormEl);
@@ -80,9 +80,9 @@ function getLatLonData(coord) {
                         forecastTempData.push(fahrenheitTemp.toFixed(1))
                     }
 
-                    if (forecastHumdityData.length < 5) {
+                    if (forecastHumidityData.length < 5) {
                         //Push next 5 days humidity at 12pm into an empty array
-                        forecastHumdityData.push(data.list[i].main.humidity);
+                        forecastHumidityData.push(data.list[i].main.humidity);
                     }
 
                     if(forecastWindSpeedData.length < 5) {
@@ -91,11 +91,20 @@ function getLatLonData(coord) {
                       }
                 }
             }
+            renderForecast(forecastTempData, forecastHumidityData, forecastWindSpeedData);
 
         });
 }
+
+function renderForecast(forecastTempData, forecastHumidityData, forecastWindSpeedData) {
+    for (let i = 0; i < 5; i++) {
+        document.querySelector(`.temperature${i}`).innerHTML = `Temperature: ${forecastTempData[i]} F`;
+        document.querySelector(`.humidity${i}`).innerHTML = `Humidity: ${forecastHumidityData[i]} %`;
+        document.querySelector(`.wind-speed${i}`).innerHTML = `Wind-Speed: ${forecastWindSpeedData[i]} m/s`;
+    }
+}
 console.log(forecastTempData);
-console.log(forecastHumdityData);
+console.log(forecastHumidityData);
 console.log(forecastWindSpeedData);
 
 inputFormEl.addEventListener("submit", getCityData);
