@@ -63,10 +63,10 @@ body {
     cursor: pointer;
   }
 
-  .container-day {
+  .forecast-container {
     display: inline-block; /* display element as an inline-block */
     width: 15%; /* set width of each container-day1 */
-    margin: 0.5%; /* add margin around each container-day1 */
+    margin: .75%; /* add margin around each container-day1 */
     padding: 1%; /* add padding inside each container-day1 */
     border-radius: 10px; /* add rounded edges to each container-day1 */
     background-color: #373a4d; /* set background color of each container-day1 */

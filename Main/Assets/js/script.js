@@ -1,5 +1,6 @@
 const cityInputEl = document.querySelector('#city');
 const inputFormEl = document.getElementById("input-form");
+const todayData = [];
 const forecastTempData = [];
 const forecastHumidityData = [];
 const forecastWindSpeedData = [];
@@ -26,35 +27,46 @@ function getCityData(event) {
             const temperature = data.main.temp;
             const temperatureElement = document.getElementById('temperature');
             temperatureElement.innerHTML = temperature + "&#176;F";
+            todayData.push(temperature);
+
 
             const humidity = data.main.humidity;
             const humidityElement = document.getElementById('humidity');
             humidityElement.innerHTML = humidity + "%";
+            todayData.push(humidity);
 
             const windSpeed = data.wind.speed;
             const windSpeedElement = document.getElementById('wind-speed');
             windSpeedElement.innerHTML = windSpeed + " MPH";
+            todayData.push(windSpeed);
 
-            // // Get Data for Current Weather
-            // const nextDay = dayjs().add(1, 'day').format("YYYY-MM-DD");
-
-            // // filter the forecast data by next day
-            // const forecast = data.list.filter(function(forecast) {
-            //     return dayjs(forecast.dt_txt).format("YYYY-MM-DD") === nextDay;
-            //   });
-
-            // const nextDayForecast = forecast[0];
-            // const forcastTemperature = nextDayForecast.main.temp;
-            // const forcastHumidity = nextDayForecast.main.humidity;
-            // const forcastWindSpeed = nextDayForecast.wind.speed;
-            // console.log(`Temperature: ${forcastTemperature}`);
-            // console.log(`Humidity: ${forcastHumidity}`);
-            // console.log(`Wind Speed: ${forcastWindSpeed}`);
             getLatLonData(data.coord);
+
+            function createButton(searchInput) {
+                const searchHistoryButton = document.getElementById("city-list");
+                const existingButtons = searchHistoryButton.getElementsByTagName("button");
+                for (let i = 0; i < existingButtons.length; i++) {
+                    if (existingButtons[i].innerHTML === searchInput) {
+                        return;
+                    }
+                }
+
+                const button = document.createElement("button");
+                button.innerHTML = searchInput;
+                searchHistoryButton.appendChild(button);
+              }
+
+            createButton(searchInput);
 
         })
 
-        .catch(error => console.error(error))
+                .catch(error => console.error(error))
+
+                function createEntryButton() {
+                    const button = document.createElement("button");
+                    button.innerHTML = searchInput;
+                    document.body.appendChild(button);
+                  }
 
 
 }
@@ -70,6 +82,7 @@ function getLatLonData(coord) {
     fetch(forecastQueryUrl)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             for (let i = 0; i < data.list.length; i++) {
                 if (data.list[i].dt_txt.includes("12:00:00")) {
                     if (forecastTempData.length < 5) {
@@ -87,11 +100,15 @@ function getLatLonData(coord) {
 
                     if(forecastWindSpeedData.length < 5) {
                         //Push next 5 days wind speed at 12pm into an empty array
-                        forecastWindSpeedData.push(data.list[i].wind.speed);
+                        let windSpeed = data.list[i].wind.speed;
+                        windSpeed = windSpeed * 2.237;
+                        forecastWindSpeedData.push(windSpeed.toFixed(1));
                       }
                 }
             }
             renderForecast(forecastTempData, forecastHumidityData, forecastWindSpeedData);
+            appendDayOfWeek()
+
 
         });
 }
@@ -100,9 +117,39 @@ function renderForecast(forecastTempData, forecastHumidityData, forecastWindSpee
     for (let i = 0; i < 5; i++) {
         document.querySelector(`.temperature${i}`).innerHTML = `Temperature: ${forecastTempData[i]} F`;
         document.querySelector(`.humidity${i}`).innerHTML = `Humidity: ${forecastHumidityData[i]} %`;
-        document.querySelector(`.wind-speed${i}`).innerHTML = `Wind-Speed: ${forecastWindSpeedData[i]} m/s`;
+        document.querySelector(`.wind-speed${i}`).innerHTML = `Wind-Speed: ${forecastWindSpeedData[i]} MPH`;
     }
 }
+
+function appendDayOfWeek() {
+    // Get the current date
+    let currentDate = new Date();
+    currentDate = currentDate + 1;
+    let existingDays = []
+    // Use a loop to iterate through each container-day element
+    for (let i = 0; i < 5; i++) {
+      // Use day.js to format the date
+      let formattedDate = dayjs(currentDate).add(i+1, 'day').format('dddd');
+      if(existingDays.includes(formattedDate)){
+        return;
+      }
+      existingDays.push(formattedDate);
+      // Get the container-day element
+      let container = document.querySelector(`.container-day${i}`);
+
+      // Create a new p element for the date
+      let dateElement = document.createElement('h3');
+      dateElement.classList.add('date');
+      dateElement.innerText = formattedDate;
+
+      // Append the date element to the container
+      container.appendChild(dateElement);
+    }
+}
+
+
+
+
 console.log(forecastTempData);
 console.log(forecastHumidityData);
 console.log(forecastWindSpeedData);
