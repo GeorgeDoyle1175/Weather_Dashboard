@@ -72,3 +72,9 @@ body {
     background-color: #373a4d; /* set background color of each container-day1 */
     border: 1px solid white;
   }
+
+  .date {
+    text-align: center; /* center align the text */
+    font-weight: bold; /* bold the text */
+    text-decoration: underline; /* underline the text */
+}

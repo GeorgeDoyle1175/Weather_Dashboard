@@ -1,17 +1,26 @@
 const cityInputEl = document.querySelector('#city');
 const inputFormEl = document.getElementById("input-form");
-const todayData = [];
+const todayDataArray = [];
 const forecastTempData = [];
 const forecastHumidityData = [];
 const forecastWindSpeedData = [];
+const searchedCities = [];
+//.includes
 
 console.log(inputFormEl);
 
 function getCityData(event) {
     event.preventDefault();
-    const searchInput = cityInputEl.value;
-    console.log(cityInputEl.value);
-
+    let searchInput;
+    //Checking if city button was clicked
+    if (event.target.matches("button")) {
+        searchInput = event.target.textContent
+    }
+    //Checking if city has already been search whether to create a new button
+    else {
+        searchInput = cityInputEl.value;
+        cityInputEl.value = "";
+    }
 
     const localQueryUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + searchInput + '&units=Imperial&appid=ffda50d2229e64d7f6563d9551b35ded'
 
@@ -22,56 +31,49 @@ function getCityData(event) {
         .then(response => response.json())
 
         .then(data => {
-            console.log(data);
+            if (!data.main) {
+                alert("Invalid City Entered");
+                return false;
+            }
 
             const temperature = data.main.temp;
             const temperatureElement = document.getElementById('temperature');
             temperatureElement.innerHTML = temperature + "&#176;F";
-            todayData.push(temperature);
+            todayDataArray.push(temperature);
 
 
             const humidity = data.main.humidity;
             const humidityElement = document.getElementById('humidity');
             humidityElement.innerHTML = humidity + "%";
-            todayData.push(humidity);
+            todayDataArray.push(humidity);
 
             const windSpeed = data.wind.speed;
             const windSpeedElement = document.getElementById('wind-speed');
             windSpeedElement.innerHTML = windSpeed + " MPH";
-            todayData.push(windSpeed);
+            todayDataArray.push(windSpeed);
 
             getLatLonData(data.coord);
-
-            function createButton(searchInput) {
-                const searchHistoryButton = document.getElementById("city-list");
-                const existingButtons = searchHistoryButton.getElementsByTagName("button");
-                for (let i = 0; i < existingButtons.length; i++) {
-                    if (existingButtons[i].innerHTML === searchInput) {
-                        return;
-                    }
-                }
-
-                const button = document.createElement("button");
-                button.innerHTML = searchInput;
-                searchHistoryButton.appendChild(button);
-              }
-
-            createButton(searchInput);
+            createEntryButton();
+            pushToLocalStorage(todayData, searchInput);
 
         })
 
-                .catch(error => console.error(error))
+        .catch(error => console.error(error))
 
-                function createEntryButton() {
-                    const button = document.createElement("button");
-                    button.innerHTML = searchInput;
-                    document.body.appendChild(button);
-                  }
-
+    function createEntryButton() {
+        if (!searchedCities.includes(searchInput)) {
+            searchedCities.push(searchInput);
+            const button = document.createElement("button");
+            button.innerHTML = searchInput;
+            document.body.appendChild(button);
+            button.addEventListener("click", getCityData);
+        }
+    }
 
 }
 
 function getLatLonData(coord) {
+
 
     const latitude = coord.lat
     const longitude = coord.lon
@@ -98,22 +100,27 @@ function getLatLonData(coord) {
                         forecastHumidityData.push(data.list[i].main.humidity);
                     }
 
-                    if(forecastWindSpeedData.length < 5) {
+                    if (forecastWindSpeedData.length < 5) {
                         //Push next 5 days wind speed at 12pm into an empty array
                         let windSpeed = data.list[i].wind.speed;
                         windSpeed = windSpeed * 2.237;
                         forecastWindSpeedData.push(windSpeed.toFixed(1));
-                      }
+                    }
                 }
+                renderForecast(forecastTempData, forecastHumidityData, forecastWindSpeedData);
             }
-            renderForecast(forecastTempData, forecastHumidityData, forecastWindSpeedData);
-            appendDayOfWeek()
-
+            appendDayOfWeek();
+            forecastTempData.length = 0;
+            forecastHumidityData.length = 0;
+            forecastWindSpeedData.length = 0;
 
         });
 }
 
 function renderForecast(forecastTempData, forecastHumidityData, forecastWindSpeedData) {
+    localStorage.setItem("forecastTempData", JSON.stringify(forecastTempData));
+    localStorage.setItem("forecastHumidityData", JSON.stringify(forecastHumidityData));
+    localStorage.setItem("forecastWindSpeedData", JSON.stringify(forecastWindSpeedData));
     for (let i = 0; i < 5; i++) {
         document.querySelector(`.temperature${i}`).innerHTML = `Temperature: ${forecastTempData[i]} F`;
         document.querySelector(`.humidity${i}`).innerHTML = `Humidity: ${forecastHumidityData[i]} %`;
@@ -128,27 +135,40 @@ function appendDayOfWeek() {
     let existingDays = []
     // Use a loop to iterate through each container-day element
     for (let i = 0; i < 5; i++) {
-      // Use day.js to format the date
-      let formattedDate = dayjs(currentDate).add(i+1, 'day').format('dddd');
-      if(existingDays.includes(formattedDate)){
-        return;
-      }
-      existingDays.push(formattedDate);
-      // Get the container-day element
-      let container = document.querySelector(`.container-day${i}`);
+        // Use day.js to format the date
+        let formattedDate = dayjs(currentDate).add(i + 1, 'day').format('dddd');
 
-      // Create a new p element for the date
-      let dateElement = document.createElement('h3');
-      dateElement.classList.add('date');
-      dateElement.innerText = formattedDate;
+        // Get the container-day element
+        let container = document.querySelector(`.container-day${i}`);
+        let dateElement = container.querySelector('.date');
 
-      // Append the date element to the container
-      container.appendChild(dateElement);
+        if (dateElement) {
+            dateElement.innerText = formattedDate;
+        } else {
+            dateElement = document.createElement('h3');
+            dateElement.classList.add('date');
+            dateElement.innerText = formattedDate;
+            container.appendChild(dateElement);
+        }
     }
 }
 
 
+function pushToLocalStorage(array, data) {
+    // Convert the array to a string
+    const todaysData = JSON.stringify(array);
 
+    // Set the string to local storage with the key "data"
+    localStorage.setItem(data, arrayString);
+}
+
+function accessLocalStorage() {
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", getCityData);
+    });
+}
 
 console.log(forecastTempData);
 console.log(forecastHumidityData);
