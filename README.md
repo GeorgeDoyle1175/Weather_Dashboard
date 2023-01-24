@@ -1,3 +1,4 @@
+<img width="1394" alt="Screen Shot 2023-01-23 at 6 44 19 PM" src="https://user-images.githubusercontent.com/119374026/214177251-cee5226c-3d5e-4513-9e02-9ea7dd0ca8c2.png">
 # Weather_Dashboard
 
 This is an HTML code that creates a weather dashboard web page. The page has a form that allows the user to search for a city's weather data by typing in the city's name or clicking on a previously searched city's button. The JavaScript code uses the OpenWeatherMap API to fetch the data, which is then displayed on the page and stored in local storage. The code also fetches forecast data for the next five days and displays it on the page.
