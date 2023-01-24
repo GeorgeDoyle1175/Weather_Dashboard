@@ -164,9 +164,19 @@ function pushToLocalStorage(array, data) {
     localStorage.setItem(data, arrayString);
 }
 
-function formatString(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+var formatString = function(str) {
+    var result = [];
+    var words = str.split(" ");
+
+    for (var i = 0; i < words.length; i++) {
+      var word = words[i].split("");
+
+      word[0] = word[0].toUpperCase();
+
+      result.push(word.join(""));
+    }
+    return result.join(" ");
+  };
 
 console.log(forecastTempData);
 console.log(forecastHumidityData);
