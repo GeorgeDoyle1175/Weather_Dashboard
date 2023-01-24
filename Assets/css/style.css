@@ -78,3 +78,14 @@ body {
     font-weight: bold; /* bold the text */
     text-decoration: underline; /* underline the text */
 }
+
+button {
+  background-color: #2196F3; /* Modern blue color */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+}

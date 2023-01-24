@@ -14,11 +14,13 @@ function getCityData(event) {
     let searchInput;
     //Checking if city button was clicked
     if (event.target.matches("button")) {
-        searchInput = event.target.textContent
+        searchInput = event.target.textContent;
+        searchInput = formatString(searchInput);
     }
     //Checking if city has already been search whether to create a new button
     else {
         searchInput = cityInputEl.value;
+        searchInput = formatString(searchInput);
         cityInputEl.value = "";
     }
 
@@ -162,12 +164,8 @@ function pushToLocalStorage(array, data) {
     localStorage.setItem(data, arrayString);
 }
 
-function accessLocalStorage() {
-    const buttons = document.querySelectorAll("button");
-
-    buttons.forEach(button => {
-        button.addEventListener("click", getCityData);
-    });
+function formatString(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 console.log(forecastTempData);
